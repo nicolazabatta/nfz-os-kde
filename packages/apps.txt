@@ -1,0 +1,16 @@
+# Desktop applications
+konsole
+krusader
+krename
+kdiff3
+ark                 # archive manager (GUI)
+kio-gdrive          # Google Drive as gdrive:/ in Krusader, Dolphin dialogs, etc.
+kaccounts-integration-qt6   # System Settings > Online Accounts (Google sign-in)
+firefox
+emacs
+
+# Flatpak and app store
+flatpak
+flatpak-kcm
+plasma-discover
+plasma-discover-flatpak

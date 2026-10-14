@@ -1,0 +1,39 @@
+# Plasma 6 (Wayland)
+plasma-desktop
+plasma-workspace
+kwin-wayland
+kde-settings-plasma
+xdg-desktop-portal-kde
+kscreen
+powerdevil
+breeze-icon-theme
+
+# Login manager and boot splash
+plasma-login-manager
+kcm-plasmalogin
+kwallet-pam         # unlocks KWallet automatically at login
+plymouth
+plymouth-system-theme
+
+# Network
+NetworkManager
+NetworkManager-wifi
+plasma-nm
+
+# VPN (OpenVPN and WireGuard, used for Private Internet Access)
+NetworkManager-openvpn
+plasma-nm-openvpn
+wireguard-tools
+jq                  # used by PIA's manual-connections scripts
+
+# Sound
+pipewire
+pipewire-pulseaudio
+wireplumber
+plasma-pa
+
+# Fonts
+google-noto-sans-fonts
+google-noto-serif-fonts
+google-noto-sans-mono-fonts
+google-noto-color-emoji-fonts

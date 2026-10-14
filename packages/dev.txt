@@ -1,0 +1,8 @@
+# Development tools
+code        # Visual Studio Code (from repos/vscode.repo)
+neovim
+tmux
+
+# Containers for VS Code Dev Containers
+podman-docker       # 'docker' command that runs podman
+podman-compose      # docker-compose files with podman

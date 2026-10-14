@@ -1,0 +1,25 @@
+# Container tools
+podman
+buildah
+skopeo
+ostree
+
+# Time sync (keeps the clock right, e.g. after the VM was suspended)
+chrony
+
+# Command-line tools
+usbutils            # lsusb
+curl
+git
+ncurses
+zsh
+
+# Archiving and compression (command line; also used by Krusader and Ark)
+tar
+gzip
+bzip2
+xz
+zstd
+zip
+unzip
+7zip                # 7z, and extracts RAR
