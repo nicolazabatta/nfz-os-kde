@@ -10,7 +10,32 @@ bump `VERSION`, and add a section at the top of this file.
 
 ---
 
-## Version 2 — in progress (not built yet)
+## Version 3 — in progress (not built yet)
+
+### Added
+- `packages/firmware.txt`: the same firmware set as Fedora Kinoite (GPU, Wi-Fi,
+  audio, CPU microcode), plus `wireless-regdb` and Mesa (`mesa-dri-drivers`,
+  `mesa-vulkan-drivers`). Version 2 on a real x86_64 machine had no Wi-Fi and
+  a low screen resolution because this firmware was missing.
+- `build.sh`: builds for the current machine's architecture; tags
+  `:latest-<arch>` and `:<VERSION>-<arch>`; `--push` to push; `--pull=newer`
+  so the base image's kernel matches the repos.
+
+### Changed
+- `scripts/05-usb-serial.sh` replaced by `scripts/05-kernel-modules.sh`: always
+  installs `kernel-modules` and `kernel-modules-extra` for the image's own kernel
+  (like Kinoite); fails the build if USB-serial drivers (and on x86_64
+  `amdgpu`, `i915`, `xe`, `nouveau`, `iwlwifi`) are missing.
+- Image tags now include the architecture (`:latest-x86_64`, `:3-x86_64`).
+  Older aarch64 builds keep their tags `:latest` and `:1`.
+
+---
+
+## Version 2 — 2026-10-15
+
+First x86_64 build (`:latest-x86_64`, `:2-x86_64`), built as-is. Booted to the
+desktop, but Wi-Fi didn't work and the display stayed at a low resolution
+(missing firmware; fixed in version 3). Rolled back to Kinoite.
 
 ### Added
 - `chrony` (time sync), enabled in `scripts/50-services.sh`. The minimal base had no
@@ -18,7 +43,6 @@ bump `VERSION`, and add a section at the top of this file.
   the ESP-IDF dev container rejected Ubuntu's repository as "not valid yet".
 - `CLAUDE.md`: project notes and conventions, read automatically by Claude Code
   (not part of the image).
-
 ---
 
 ## Version 1 — 2026-10-13

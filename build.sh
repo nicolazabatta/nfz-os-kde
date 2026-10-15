@@ -10,21 +10,23 @@
 #    ./build.sh --push    build, then push both tags
 #
 #  Tags produced (ARCH = this machine's architecture, e.g. x86_64 or aarch64):
-#    <IMAGE>:latest-<ARCH>
-#    <IMAGE>:<VERSION>-<ARCH>
+#    <REGISTRY>/<QUAY_USER>/<IMAGE_NAME>:latest-<ARCH>
+#    <REGISTRY>/<QUAY_USER>/<IMAGE_NAME>:<VERSION>-<ARCH>
+#
+#  Any setting below can be overridden for one run, e.g.:
+#    QUAY_USER=someone IMAGE_NAME=test-kde ./build.sh
 #
 #  The full build output is saved to build.log (ignored by git).
 # =============================================================================
 set -euo pipefail
 
 # --- Settings ----------------------------------------------------------------
-REGISTRY="quay.io"
-USER="quizzical0902"
-OSNAME="nfz-os-kde"
-
-# Set your quay user here, or run with: IMAGE=quay.io/<user>/myos-kde ./build.sh
-IMAGE="${IMAGE:-$REGISTRY/$USER/$OSNAME}"
+REGISTRY="${REGISTRY:-quay.io}"
+QUAY_USER="${QUAY_USER:-quizzical0902}"      # your quay.io username
+IMAGE_NAME="${IMAGE_NAME:-nfz-os-kde}"       # repository name on quay.io
 LOG_FILE="build.log"
+
+IMAGE="$REGISTRY/$QUAY_USER/$IMAGE_NAME"
 
 # --- Arguments ----------------------------------------------------------------
 case "${1:-}" in
@@ -36,10 +38,15 @@ esac
 # --- Checks -------------------------------------------------------------------
 cd "$(dirname "$(readlink -f "$0")")"     # run from the project folder
 
-if [[ "$IMAGE" == *"<"* ]]; then
-    echo "ERROR: set your quay user in IMAGE at the top of $0 (or export IMAGE=...)" >&2
+if [[ "$QUAY_USER" == *"<"* || -z "$QUAY_USER" ]]; then
+    echo "ERROR: set QUAY_USER at the top of $0 (or run: QUAY_USER=<name> $0)" >&2
     exit 1
 fi
+
+[[ -n "$IMAGE_NAME" ]] || {
+    echo "ERROR: IMAGE_NAME is empty" >&2
+    exit 1
+}
 
 [[ -f VERSION && -f Containerfile ]] || {
     echo "ERROR: VERSION or Containerfile not found in $(pwd)" >&2
@@ -61,7 +68,10 @@ echo "==> Log: $(pwd)/$LOG_FILE"
 
 # --- Build --------------------------------------------------------------------
 # Extra privileges: stage 1 assembles a full root filesystem (see Containerfile).
+# --pull=newer: always start from the current fedora-bootc base, so its kernel
+# matches the kernel-modules packages in Fedora's repos.
 sudo podman build \
+    --pull=newer \
     --cap-add=all \
     --security-opt=label=type:unconfined_t \
     --device=/dev/fuse \
@@ -72,10 +82,11 @@ sudo podman build \
 # --- Check the result ---------------------------------------------------------
 echo
 echo "=== Build summary ==="
-grep -E '^==>|USB-serial|PRETTY_NAME' "$LOG_FILE" || true
+grep -E '^==>|Drivers present|PRETTY_NAME' "$LOG_FILE" || true
 
-grep -q "PRETTY_NAME=\"NFZ Fedora .* KDE ${VERSION}\"" "$LOG_FILE" || {
-    echo "ERROR: branding line for version $VERSION not found in $LOG_FILE" >&2
+# 20-branding.sh prints the PRETTY_NAME it set; it must end with this VERSION
+grep -q "^PRETTY_NAME=\".* ${VERSION}\"" "$LOG_FILE" || {
+    echo "ERROR: PRETTY_NAME for version $VERSION not found in $LOG_FILE" >&2
     exit 1
 }
 echo "Build OK: $TAG_VERSION"

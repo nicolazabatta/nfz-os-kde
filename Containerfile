@@ -20,16 +20,12 @@
 #
 #  How to build, publish and install (run from this folder)
 #  --------------------------------------------------------
-#    sudo podman build --cap-add=all --security-opt=label=type:unconfined_t \
-#        --device=/dev/fuse \
-#        -t quay.io/<user>/myos-kde:latest -t quay.io/<user>/myos-kde:$(cat VERSION) .
-#    sudo podman push quay.io/<user>/myos-kde:latest
-#    sudo podman push quay.io/<user>/myos-kde:$(cat VERSION)
-#    sudo bootc upgrade && sudo systemctl reboot
-#
-#  Why the build needs extra privileges: stage 1 below assembles a complete
-#  root filesystem (mounts, device nodes, SELinux labels), which a normal
-#  unprivileged container build is not allowed to do.
+#    ./build.sh            build for this machine's architecture
+#    ./build.sh --push     build and push
+#  Tags: quay.io/<user>/nfz-os-kde:latest-<arch> and :<VERSION>-<arch>
+#  (<arch> = x86_64 or aarch64). On the machine running the OS:
+#    sudo bootc switch quay.io/<user>/nfz-os-kde:latest-<arch>   (first time)
+#    sudo bootc upgrade && sudo systemctl reboot               (updates)
 #
 #  Where changes live on the installed system
 #  ------------------------------------------
@@ -129,12 +125,12 @@ COPY system_files/ /
 # producing a half-configured OS. The `==> name` line marks each script in the
 # build log.
 #
-#   05-usb-serial.sh   guarantee cp210x/ch341/ftdi/pl2303/cdc_acm drivers
-#   10-initramfs.sh    rebuild the initramfs with Plymouth (graphical LUKS prompt)
-#   20-branding.sh     GRUB name: "NFZ Fedora <release> KDE <VERSION>"
-#   30-flatpak.sh      add Flathub as a system-wide Flatpak remote
-#   40-shell.sh        zsh as default shell, config in ~/.config/zsh
-#   50-services.sh     enable login screen, NetworkManager, chronyd; boot to desktop
+#   05-kernel-modules.sh  kernel-modules + -extra for the image's kernel; checks USB-serial (and on x86_64 GPU/Wi-Fi) drivers
+#   10-initramfs.sh       rebuild the initramfs with Plymouth (graphical LUKS prompt)
+#   20-branding.sh        GRUB name: "NFZ Fedora <release> KDE <VERSION>"
+#   30-flatpak.sh         add Flathub as a system-wide Flatpak remote
+#   40-shell.sh           zsh as default shell, config in ~/.config/zsh
+#   50-services.sh        enable login screen, NetworkManager, chronyd; boot to desktop
 #
 # VERSION is copied alongside so 20-branding.sh can read our release number.
 # Everything in /tmp is deleted afterwards, so none of it remains in the image.

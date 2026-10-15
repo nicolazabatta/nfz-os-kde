@@ -1,0 +1,40 @@
+# Firmware for real hardware (same set as Fedora Kinoite).
+# Without it, Wi-Fi doesn't start and graphics fall back to a basic
+# low-resolution display.
+linux-firmware              # shared base set
+linux-firmware-whence       # licence/inventory file for linux-firmware
+
+# CPU
+amd-ucode-firmware          # AMD CPU microcode
+
+# Graphics
+amd-gpu-firmware
+intel-gpu-firmware
+nvidia-gpu-firmware         # for nouveau (open NVIDIA driver)
+
+# Wi-Fi / Bluetooth
+atheros-firmware
+brcmfmac-firmware
+iwlegacy-firmware
+iwlwifi-dvm-firmware
+iwlwifi-mld-firmware
+iwlwifi-mvm-firmware
+libertas-firmware
+mt7xxx-firmware
+nxpwireless-firmware
+realtek-firmware
+tiwilink-firmware
+wireless-regdb              # Wi-Fi regulatory database (channels/power per country)
+
+# Audio (laptop sound chips)
+alsa-sof-firmware
+cirrus-audio-firmware
+intel-audio-firmware
+
+# Other
+intel-vsc-firmware          # laptop camera sensors (Intel)
+qcom-wwan-firmware          # cellular modems
+
+# Graphics userspace (OpenGL/Vulkan for KWin and apps)
+mesa-dri-drivers
+mesa-vulkan-drivers
