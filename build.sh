@@ -20,7 +20,7 @@ set -euo pipefail
 # --- Settings ----------------------------------------------------------------
 REGISTRY="quay.io"
 USER="quizzical0902"
-OSNAME="nfz-kde-os"
+OSNAME="nfz-os-kde"
 
 # Set your quay user here, or run with: IMAGE=quay.io/<user>/myos-kde ./build.sh
 IMAGE="${IMAGE:-$REGISTRY/$USER/$OSNAME}"
