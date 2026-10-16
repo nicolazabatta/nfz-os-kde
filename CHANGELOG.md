@@ -17,6 +17,10 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
   Internet Access's own app, which is installed per machine from PIA's `.run`
   file. Its installer can't add them itself (no dnf on a bootc system); all
   three were missing on version 3.
+- `gh` (GitHub CLI) + `openssh-clients` (`packages/dev.txt`): `gh auth login`
+  signs in to GitHub through the browser and sets up git to push without typing
+  a token; `openssh-clients` (`ssh`, `ssh-keygen`) was only present as a
+  dependency, now listed so git over SSH keeps working.
 
 ### Changed
 - `build.sh`: the registry login is kept in `AUTH_FILE`
