@@ -20,6 +20,12 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
   only on the first install, so without these rules a package added in a later
   version could find its `/var` folders missing on an existing machine
   (bootc lint "var-tmpfiles").
+- Bluetooth (`packages/desktop.txt`): `bluez` (the `bluetoothd` service,
+  enabled in `scripts/50-services.sh`), `bluedevil` (Plasma's tray icon,
+  pairing wizard and System Settings page), `bluez-obexd` (file transfer).
+  The adapter, its driver and firmware already worked, and PipeWire's
+  Bluetooth audio plugin is part of `pipewire-libs`; only the service and the
+  Plasma side were missing (weak deps are off).
 
 ### Changed
 - `Containerfile` steps 2 and 4 run with a throwaway `/run`

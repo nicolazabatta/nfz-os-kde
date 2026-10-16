@@ -32,6 +32,11 @@ pipewire-pulseaudio
 wireplumber
 plasma-pa
 
+# Bluetooth (PipeWire's Bluetooth audio plugin is already in pipewire-libs)
+bluez               # bluetoothd: the Bluetooth service
+bluedevil           # Plasma's Bluetooth tray icon, pairing wizard, System Settings page
+bluez-obexd         # send/receive files over Bluetooth (used by bluedevil)
+
 # Fonts
 google-noto-sans-fonts
 google-noto-serif-fonts
