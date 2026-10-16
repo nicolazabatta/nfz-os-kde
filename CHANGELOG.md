@@ -161,3 +161,6 @@ First numbered release. Everything below this section is the history that led to
 - `plasma-discover-notifier` for Flatpak update notifications.
 - Check whether the `systemd-remount-fs` error predates the in-image `dracut` rebuild.
 - Review the two `bootc container lint` warnings.
+- Google Drive via `rclone` + `fuse3` (`~/GoogleDrive`, user service `rclone-gdrive`);
+  drop `kio-gdrive` + `kaccounts-integration-qt6` (Google no longer grants KDE Drive access).
+- `glibc-langpack-en` + `/etc/locale.conf` (`LANG=en_US.UTC-8`) to fix Qt's non-UTF-8 locale warning.
