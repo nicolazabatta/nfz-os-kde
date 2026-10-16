@@ -122,7 +122,8 @@ COPY system_files/ /
 # -----------------------------------------------------------------------------
 # Each scripts/*.sh runs in file-name order with strict error handling
 # (`-e` stop on any error, `-u` stop on unset variables, `-o pipefail` stop if
-# any part of a pipe fails), so a broken step fails the build instead of
+# any part of a pipe fails), and `|| exit 1` stops the loop at the first failing
+# script, so a broken step fails the build instead of
 # producing a half-configured OS. The `==> name` line marks each script in the
 # build log.
 #
@@ -141,7 +142,7 @@ COPY VERSION /tmp/VERSION
 COPY scripts/ /tmp/scripts/
 RUN for s in /tmp/scripts/*.sh; do \
         echo "==> ${s##*/}"; \
-        bash -euo pipefail "$s"; \
+        bash -euo pipefail "$s" || exit 1; \
     done \
  && rm -rf /tmp/* /var/cache/* /var/log/*
 

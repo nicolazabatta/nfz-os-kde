@@ -3,9 +3,12 @@
 # writes to /opt/piavpn and /usr/local/bin) work. The minimal base ships them
 # as read-only folders in the image instead.
 # Refuse if a package has put real content there (it would be lost).
+# mimeinfo.cache is only an index that package scripts regenerate; ignore it.
 [ -z "$(ls -A /opt)" ] || { echo "ERROR: /opt is not empty" >&2; exit 1; }
-[ -z "$(find /usr/local -mindepth 1 -not -type d)" ] || {
-    echo "ERROR: /usr/local contains files" >&2
+files=$(find /usr/local -mindepth 1 -not -type d -not -name mimeinfo.cache)
+[ -z "$files" ] || {
+    echo "ERROR: /usr/local contains files:" >&2
+    echo "$files" >&2
     exit 1
 }
 rm -rf /opt /usr/local

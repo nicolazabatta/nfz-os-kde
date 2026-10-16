@@ -32,7 +32,14 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
   (`scripts/25-opt-usrlocal.sh`), like Fedora Kinoite. The minimal base ships
   them as read-only folders inside the image, so PIA's installer (which writes
   to `/opt/piavpn` and `/usr/local/bin`) failed on version 4. The build fails if
-  a package ever puts files there.
+  a package ever puts files there (the generated `mimeinfo.cache` index is
+  ignored).
+
+### Fixed
+- `Containerfile` step 4: a failing script now stops the build
+  (`|| exit 1`). Before, the loop ignored every script's failure except the
+  last one's, so the first version 5 build was pushed although
+  `25-opt-usrlocal.sh` had stopped with an error (and `/opt` was unchanged).
 
 ---
 
