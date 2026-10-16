@@ -10,11 +10,17 @@
 #    ./build.sh --push    build, then push both tags
 #
 #  Tags produced (ARCH = this machine's architecture, e.g. x86_64 or aarch64):
-#    <REGISTRY>/<QUAY_USER>/<IMAGE_NAME>:latest-<ARCH>
-#    <REGISTRY>/<QUAY_USER>/<IMAGE_NAME>:<VERSION>-<ARCH>
+#    <REGISTRY>/<REGISTRY_USER>/<IMAGE_NAME>:latest-<ARCH>
+#    <REGISTRY>/<REGISTRY_USER>/<IMAGE_NAME>:<VERSION>-<ARCH>
 #
 #  Any setting below can be overridden for one run, e.g.:
-#    QUAY_USER=someone IMAGE_NAME=test-kde ./build.sh
+#    REGISTRY_USER=someone IMAGE_NAME=test-kde ./build.sh
+#
+#  The registry login is kept in AUTH_FILE, which survives reboots (a plain
+#  `sudo podman login` is stored under /run and is lost on reboot). Log in
+#  once per build machine, e.g. with a quay robot account:
+#    echo '<token>' | sudo podman login quay.io -u '<user>+builder' \
+#        --password-stdin --authfile /root/.config/containers/auth.json
 #
 #  The full build output is saved to build.log (ignored by git).
 # =============================================================================
@@ -22,11 +28,12 @@ set -euo pipefail
 
 # --- Settings ----------------------------------------------------------------
 REGISTRY="${REGISTRY:-quay.io}"
-QUAY_USER="${QUAY_USER:-quizzical0902}"      # your quay.io username
-IMAGE_NAME="${IMAGE_NAME:-nfz-os-kde}"       # repository name on quay.io
+REGISTRY_USER="${REGISTRY_USER:-quizzical0902}"   # your user/namespace on the registry
+IMAGE_NAME="${IMAGE_NAME:-nfz-os-kde}"           # repository name on the registry
+AUTH_FILE="${AUTH_FILE:-/root/.config/containers/auth.json}"  # persistent login
 LOG_FILE="build.log"
 
-IMAGE="$REGISTRY/$QUAY_USER/$IMAGE_NAME"
+IMAGE="$REGISTRY/$REGISTRY_USER/$IMAGE_NAME"
 
 # --- Arguments ----------------------------------------------------------------
 case "${1:-}" in
@@ -38,8 +45,8 @@ esac
 # --- Checks -------------------------------------------------------------------
 cd "$(dirname "$(readlink -f "$0")")"     # run from the project folder
 
-if [[ "$QUAY_USER" == *"<"* || -z "$QUAY_USER" ]]; then
-    echo "ERROR: set QUAY_USER at the top of $0 (or run: QUAY_USER=<name> $0)" >&2
+if [[ "$REGISTRY_USER" == *"<"* || -z "$REGISTRY_USER" ]]; then
+    echo "ERROR: set REGISTRY_USER at the top of $0 (or run: REGISTRY_USER=<name> $0)" >&2
     exit 1
 fi
 
@@ -93,15 +100,16 @@ echo "Build OK: $TAG_VERSION"
 
 # --- Push ---------------------------------------------------------------------
 if (( PUSH )); then
-    # Log in only if root isn't already logged in to the registry
-    sudo podman login --get-login "$REGISTRY" >/dev/null 2>&1 \
-        || sudo podman login "$REGISTRY"
-    sudo podman push "$TAG_LATEST"
-    sudo podman push "$TAG_VERSION"
+    # Log in only if AUTH_FILE doesn't already hold a login for the registry
+    sudo mkdir -p "$(dirname "$AUTH_FILE")"
+    sudo podman login --authfile "$AUTH_FILE" --get-login "$REGISTRY" >/dev/null 2>&1 \
+        || sudo podman login --authfile "$AUTH_FILE" "$REGISTRY"
+    sudo podman push --authfile "$AUTH_FILE" "$TAG_LATEST"
+    sudo podman push --authfile "$AUTH_FILE" "$TAG_VERSION"
     echo "Pushed: $TAG_LATEST and $TAG_VERSION"
 else
     echo
     echo "Not pushed. To push this build:"
-    echo "  sudo podman push $TAG_LATEST"
-    echo "  sudo podman push $TAG_VERSION"
+    echo "  sudo podman push --authfile $AUTH_FILE $TAG_LATEST"
+    echo "  sudo podman push --authfile $AUTH_FILE $TAG_VERSION"
 fi
