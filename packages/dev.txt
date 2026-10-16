@@ -6,6 +6,7 @@ tmux
 # GitHub and git remotes
 gh                  # GitHub CLI: browser sign-in (gh auth login), also sets up git pushes
 openssh-clients     # ssh, ssh-keygen: git over SSH (only a dependency until now)
+ksshaskpass         # KDE passphrase dialog for SSH keys; can remember it in KWallet
 
 # Containers for VS Code Dev Containers
 podman-docker       # 'docker' command that runs podman

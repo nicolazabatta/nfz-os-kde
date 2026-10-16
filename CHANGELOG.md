@@ -21,6 +21,10 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
   signs in to GitHub through the browser and sets up git to push without typing
   a token; `openssh-clients` (`ssh`, `ssh-keygen`) was only present as a
   dependency, now listed so git over SSH keeps working.
+- `ksshaskpass` (`packages/dev.txt`): KDE dialog for SSH key passphrases, which
+  can remember them in KWallet. Without it, anything that isn't a terminal
+  (VS Code's Source Control, Claude Code) can't unlock a key
+  ("ssh-askpass: No such file or directory").
 
 ### Changed
 - `build.sh`: the registry login is kept in `AUTH_FILE`
@@ -177,6 +181,29 @@ First numbered release. Everything below this section is the history that led to
   Serial access: `grep '^dialout:' /usr/lib/group | sudo tee -a /etc/group`, then
   `sudo usermod -aG dialout $USER`; attach the board to the VM in Parallels.
   Full notes: project doc `esp-idf-devcontainer.md`.
+- GitHub over SSH, on a brand-new machine or for a new user (needs version 4 for
+  `ksshaskpass`; one SSH key per machine, so a lost machine's key can be removed alone):
+  1. Git identity: `git config --global user.name "Nicola Zabatta"` and
+     `git config --global user.email "nicolazabatta@gmail.com"`.
+  2. Create a key: `ssh-keygen -t ed25519 -C "nicolazabatta@gmail.com"` (default
+     location; set a passphrase).
+  3. Add it on GitHub: copy the line from `cat ~/.ssh/id_ed25519.pub`, then GitHub →
+     Settings → SSH and GPG keys → New SSH key (name it after the machine).
+  4. Test: `ssh -T git@github.com` (the user is literally `git`); expect
+     "Hi nicolazabatta! You've successfully authenticated".
+  5. Use SSH for the repo: `git clone git@github.com:nicolazabatta/nfz-os-kde.git`,
+     or in an existing HTTPS clone:
+     `git remote set-url origin git@github.com:nicolazabatta/nfz-os-kde.git`.
+  6. Passphrase dialog for apps without a terminal (VS Code, Claude Code): create
+     `~/.config/plasma-workspace/env/askpass.sh` with
+     `export SSH_ASKPASS=/usr/bin/ksshaskpass` and `export SSH_ASKPASS_REQUIRE=prefer`.
+  7. Unlock the key at login: create `~/.config/autostart/ssh-add.desktop` with
+     `[Desktop Entry]`, `Type=Application`, `Name=ssh-add`, `Exec=ssh-add -q`
+     (one per line; with no file name, `ssh-add` loads the standard `~/.ssh/id_*` keys).
+  8. Log out and back in; in the passphrase dialog tick "Remember password" (stored
+     in KWallet). From then on the key unlocks silently at login.
+  - Alternative to steps 2–5 over HTTPS: `gh auth login` (GitHub.com → HTTPS →
+    authenticate Git: yes → login with a web browser).
 - Claude: use the web app at claude.ai (Firefox, or a Chromium-based browser's
   "Install page as app" for its own window). The desktop app's Linux beta is Debian/Ubuntu only.
 - Google Drive: nothing in the image for now (KDE's `kio-gdrive` was removed in
