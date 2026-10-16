@@ -1,16 +1,32 @@
 # NFZ-OS-KDE changelog
 
 Custom bootc image: Fedora 44 minimal base + bare KDE Plasma 6 (Wayland).
-Image: `quay.io/<username>/myos-kde:latest` (plus a tag per release: `:1`, `:2`, …)
+Image: `quay.io/<username>/nfz-os-kde:latest-<arch>` (plus a tag per release:
+`:<VERSION>-<arch>`, e.g. `:3-x86_64`). Built with `./build.sh`.
 
-Releases are numbered. The number lives in the `VERSION` file, appears in the
-GRUB entry ("NFZ Fedora 44 KDE 1"), the project folder name (`nfz-os-kde-1`)
-and the image tag. To start a new release: copy the folder to the next number,
-bump `VERSION`, and add a section at the top of this file.
+Releases are numbered. The number lives in the `VERSION` file and appears in the
+GRUB entry ("NFZ Fedora 44 KDE 3") and the image tag. To start a new release:
+bump `VERSION`, add a section at the top of this file, and tag the commit in git.
 
 ---
 
-## Version 3 — in progress (not built yet)
+## Version 4 — in progress (not built yet)
+
+### Changed
+- `build.sh`: the registry login is kept in `AUTH_FILE`
+  (`/root/.config/containers/auth.json`), so it survives reboots; a plain
+  `sudo podman login` is stored under `/run` and was lost on every reboot.
+  The setting `QUAY_USER` is renamed `REGISTRY_USER`.
+
+### Removed
+- `kio-gdrive` + `kaccounts-integration-qt6` (commented out in
+  `packages/apps.txt` for possible later use): Google's consent screen for KDE
+  Online Accounts doesn't offer Drive access, so listing files failed with
+  "Requested resource is forbidden".
+
+---
+
+## Version 3 — 2026-10-16
 
 ### Added
 - `packages/firmware.txt`: the same firmware set as Fedora Kinoite (GPU, Wi-Fi,
@@ -153,14 +169,15 @@ First numbered release. Everything below this section is the history that led to
   Full notes: project doc `esp-idf-devcontainer.md`.
 - Claude: use the web app at claude.ai (Firefox, or a Chromium-based browser's
   "Install page as app" for its own window). The desktop app's Linux beta is Debian/Ubuntu only.
-- Google Drive: add your Google account in System Settings → Online Accounts,
-  then open `gdrive:/` in Krusader.
+- Google Drive: nothing in the image for now (KDE's `kio-gdrive` was removed in
+  version 4 because Google no longer grants it Drive access). A better option
+  is still to be chosen; see Pending.
 - `/etc/fstab`: comment out the `/` line (fixes the `systemd-remount-fs` failure on the composefs root).
 
 ## Pending / ideas
 - `plasma-discover-notifier` for Flatpak update notifications.
 - Check whether the `systemd-remount-fs` error predates the in-image `dracut` rebuild.
 - Review the two `bootc container lint` warnings.
-- Google Drive via `rclone` + `fuse3` (`~/GoogleDrive`, user service `rclone-gdrive`);
-  drop `kio-gdrive` + `kaccounts-integration-qt6` (Google no longer grants KDE Drive access).
-- `glibc-langpack-en` + `/etc/locale.conf` (`LANG=en_US.UTC-8`) to fix Qt's non-UTF-8 locale warning.
+- Google Drive: choose a replacement for `kio-gdrive` (removed in version 4).
+  One candidate: `rclone` + `fuse3` (`~/GoogleDrive`, user service `rclone-gdrive`).
+- `glibc-langpack-en` + `/etc/locale.conf` (`LANG=en_US.UTF-8`) to fix Qt's non-UTF-8 locale warning.

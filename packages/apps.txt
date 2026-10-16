@@ -4,8 +4,11 @@ krusader
 krename
 kdiff3
 ark                 # archive manager (GUI)
-kio-gdrive          # Google Drive as gdrive:/ in Krusader, Dolphin dialogs, etc.
-kaccounts-integration-qt6   # System Settings > Online Accounts (Google sign-in)
+# Google Drive: removed in version 4, kept here in case it's useful later.
+# KDE's Google sign-in no longer gets Drive access from Google
+# ("Requested resource is forbidden"), so gdrive:/ can't list files.
+#kio-gdrive          # Google Drive as gdrive:/ in Krusader, Dolphin dialogs, etc.
+#kaccounts-integration-qt6   # System Settings > Online Accounts (Google sign-in)
 firefox
 emacs
 
