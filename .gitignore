@@ -1,3 +1,7 @@
 # Build output
 build.log
 CLAUDE.md
+
+# Claude Code: per-machine notes and settings (back up manually; see CLAUDE.md)
+CLAUDE.local.md
+.claude/
