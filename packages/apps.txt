@@ -9,6 +9,13 @@ ark                 # archive manager (GUI)
 # ("Requested resource is forbidden"), so gdrive:/ can't list files.
 #kio-gdrive          # Google Drive as gdrive:/ in Krusader, Dolphin dialogs, etc.
 #kaccounts-integration-qt6   # System Settings > Online Accounts (Google sign-in)
+
+# Disks
+partitionmanager    # KDE Partition Manager: partitions, usage per partition, SMART view
+kpmcore             # Partition Manager's backend
+plasma-disks        # notifies when a disk's SMART health goes bad
+filelight           # shows what's using the space
+
 firefox
 emacs
 

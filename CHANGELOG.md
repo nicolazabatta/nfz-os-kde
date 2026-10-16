@@ -10,7 +10,24 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
-## Version 4 — in progress (not built yet)
+## Version 5 — in progress (not built yet)
+
+### Added
+- Disk tools (`packages/apps.txt`): `partitionmanager` + `kpmcore` (KDE
+  Partition Manager: partitions, usage per partition, SMART view),
+  `plasma-disks` (desktop notification when a disk's SMART health goes bad,
+  plus a SMART page in Info Center), `filelight` (what's using the space).
+- Disks and filesystems (`packages/system.txt`): `udisks2`, `smartmontools`,
+  `btrfs-progs`, `ntfs-3g`, `ntfsprogs`, `exfatprogs`, `cryptsetup`, `lvm2`.
+  All were missing (weak deps are off): without `udisks2`, Plasma's Device
+  Notifier and Krusader can't mount USB sticks or external drives; without
+  `smartmontools`, Partition Manager and `plasma-disks` have no SMART data;
+  without the filesystem tools, Partition Manager shows those filesystems as
+  unsupported.
+
+---
+
+## Version 4 — 2026-10-16
 
 ### Added
 - `iptables-nft`, `iproute`, `libnsl` (`packages/system.txt`): needed by Private

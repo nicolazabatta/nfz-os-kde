@@ -24,6 +24,16 @@ zip
 unzip
 7zip                # 7z, and extracts RAR
 
+# Disks and filesystems (used by Partition Manager, Plasma and Krusader)
+udisks2             # mounting USB sticks and external drives from Plasma/Krusader
+smartmontools       # smartctl: SMART health data
+btrfs-progs
+ntfs-3g             # read/write NTFS (Windows drives)
+ntfsprogs           # format/resize NTFS
+exfatprogs          # exFAT (SD cards, large USB sticks)
+cryptsetup          # LUKS encrypted drives
+lvm2
+
 # Needed by Private Internet Access (PIA's app is installed per machine from its .run file)
 iptables-nft        # iptables (kill switch, firewall rules)
 iproute             # ip (routes, interfaces)
