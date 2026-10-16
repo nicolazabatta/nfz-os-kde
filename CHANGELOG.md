@@ -10,7 +10,7 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
-## Version 6 — in progress (not built yet)
+## Version 6 — 2026-10-16
 
 ### Added
 - `xterm` (`packages/system.txt`, PIA group): PIA 3.8's installer requires it
