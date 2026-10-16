@@ -24,6 +24,15 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
   `smartmontools`, Partition Manager and `plasma-disks` have no SMART data;
   without the filesystem tools, Partition Manager shows those filesystems as
   unsupported.
+- `system_files/usr/lib/tmpfiles.d/nfz-usrlocal.conf`: creates
+  `/var/usrlocal/bin`, `sbin`, `share` and `share/applications` on new machines.
+
+### Changed
+- `/opt` and `/usr/local` are now links to `/var/opt` and `/var/usrlocal`
+  (`scripts/25-opt-usrlocal.sh`), like Fedora Kinoite. The minimal base ships
+  them as read-only folders inside the image, so PIA's installer (which writes
+  to `/opt/piavpn` and `/usr/local/bin`) failed on version 4. The build fails if
+  a package ever puts files there.
 
 ---
 
@@ -186,6 +195,18 @@ First numbered release. Everything below this section is the history that led to
 - Fedora Flatpak remote: `sudo flatpak remote-add --if-not-exists fedora oci+https://registry.fedoraproject.org`
 - Existing user's shell: `sudo usermod -s /usr/bin/zsh $USER && mkdir -p ~/.config/zsh`
 - Oh My Zsh: installed in `~/.local/share/oh-my-zsh`.
+- PIA's own app (needs version 5 for `/opt` and `/usr/local`, and the
+  version 4 packages `iptables-nft`, `iproute`, `libnsl`):
+  1. Check: `readlink /opt /usr/local` prints `var/opt` and `../var/usrlocal`.
+  2. Extract the installer: `sh pia-linux-<ver>.run --noexec --target pia-linux-<ver>`.
+  3. In that folder: `sed -i -e s,/usr/share,/usr/local/share,g install.sh`
+     (`/usr/share` is read-only).
+  4. Run `./install.sh` as your normal user (it asks for sudo itself).
+  5. Check: `systemctl status piavpn` is active; start Private Internet Access
+     from the app menu.
+  - Updates: decline PIA's built-in updater (it runs an unpatched installer);
+    repeat steps 2–4 with the new `.run`. The uninstaller in `/opt/piavpn/bin`
+    needs the same `sed`.
 - PIA over OpenVPN: import PIA's `.ovpn` files in System Settings → Wi-Fi & Networking → + → Import VPN connection.
 - PIA over WireGuard: generate a config with PIA's `manual-connections` scripts (github.com/pia-foss/manual-connections).
 - VS Code Dev Containers: install the Dev Containers extension; set

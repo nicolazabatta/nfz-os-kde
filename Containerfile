@@ -109,6 +109,7 @@ RUN sed 's/#.*//' /tmp/packages/*.txt \
 # -----------------------------------------------------------------------------
 # Copied onto / unchanged, mirroring their real path:
 #   system_files/usr/lib/bootc/kargs.d/10-splash.toml   boot splash arguments
+#   system_files/usr/lib/tmpfiles.d/nfz-usrlocal.conf   folders under /var/usrlocal
 #   system_files/etc/containers/nodocker                silence podman-docker
 #   system_files/etc/containers/registries.conf.d/...   short image names
 # Copied after the packages so a package can't overwrite our versions.
@@ -128,6 +129,7 @@ COPY system_files/ /
 #   05-kernel-modules.sh  kernel-modules + -extra for the image's kernel; checks USB-serial (and on x86_64 GPU/Wi-Fi) drivers
 #   10-initramfs.sh       rebuild the initramfs with Plymouth (graphical LUKS prompt)
 #   20-branding.sh        GRUB name: "NFZ Fedora <release> KDE <VERSION>"
+#   25-opt-usrlocal.sh    /opt and /usr/local as links into /var (writable, like Kinoite)
 #   30-flatpak.sh         add Flathub as a system-wide Flatpak remote
 #   40-shell.sh           zsh as default shell, config in ~/.config/zsh
 #   50-services.sh        enable login screen, NetworkManager, chronyd; boot to desktop
