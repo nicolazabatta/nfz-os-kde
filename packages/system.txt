@@ -23,3 +23,8 @@ zstd
 zip
 unzip
 7zip                # 7z, and extracts RAR
+
+# Needed by Private Internet Access (PIA's app is installed per machine from its .run file)
+iptables-nft        # iptables (kill switch, firewall rules)
+iproute             # ip (routes, interfaces)
+libnsl              # network library used by PIA's daemon

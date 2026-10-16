@@ -12,6 +12,12 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ## Version 4 — in progress (not built yet)
 
+### Added
+- `iptables-nft`, `iproute`, `libnsl` (`packages/system.txt`): needed by Private
+  Internet Access's own app, which is installed per machine from PIA's `.run`
+  file. Its installer can't add them itself (no dnf on a bootc system); all
+  three were missing on version 3.
+
 ### Changed
 - `build.sh`: the registry login is kept in `AUTH_FILE`
   (`/root/.config/containers/auth.json`), so it survives reboots; a plain
