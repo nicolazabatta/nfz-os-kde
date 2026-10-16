@@ -96,9 +96,15 @@ COPY repos/ /etc/yum.repos.d/
 #
 # Package lists are copied in their own COPY so this slow step is only re-run
 # when a package list changes, not when a script or config file does.
+#
+# --mount=type=tmpfs,target=/run gives the step a throwaway /run: work folders
+# that packages leave there (dnf, lvm, mdadm, ...) are discarded instead of
+# ending up in the image (bootc lint "nonempty-run-tmp"). /run is an empty
+# in-memory folder on a running system anyway.
 # -----------------------------------------------------------------------------
 COPY packages/ /tmp/packages/
-RUN sed 's/#.*//' /tmp/packages/*.txt \
+RUN --mount=type=tmpfs,target=/run \
+    sed 's/#.*//' /tmp/packages/*.txt \
       | xargs dnf -y install --setopt=install_weak_deps=False \
  && dnf clean all \
  && rm -rf /tmp/packages /var/cache/* /var/log/*
@@ -135,13 +141,16 @@ COPY system_files/ /
 #   30-flatpak.sh         add Flathub as a system-wide Flatpak remote
 #   40-shell.sh           zsh as default shell, config in ~/.config/zsh
 #   50-services.sh        enable login screen, NetworkManager, chronyd; boot to desktop
+#   90-var-tmpfiles.sh    boot-time rules for the folders packages created in /var
 #
 # VERSION is copied alongside so 20-branding.sh can read our release number.
+# The step gets a throwaway /run, like step 2.
 # Everything in /tmp is deleted afterwards, so none of it remains in the image.
 # -----------------------------------------------------------------------------
 COPY VERSION /tmp/VERSION
 COPY scripts/ /tmp/scripts/
-RUN for s in /tmp/scripts/*.sh; do \
+RUN --mount=type=tmpfs,target=/run \
+    for s in /tmp/scripts/*.sh; do \
         echo "==> ${s##*/}"; \
         bash -euo pipefail "$s" || exit 1; \
     done \

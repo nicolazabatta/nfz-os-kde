@@ -10,6 +10,25 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
+## Version 7 — in progress (not built yet)
+
+### Added
+- `scripts/90-var-tmpfiles.sh` (runs last): writes
+  `/usr/lib/tmpfiles.d/nfz-var.conf`, a boot-time rule for every folder the
+  packages created in `/var` that no existing rule covers (same mode and
+  owner), and deletes dnf's `countme` files. bootc copies the image's `/var`
+  only on the first install, so without these rules a package added in a later
+  version could find its `/var` folders missing on an existing machine
+  (bootc lint "var-tmpfiles").
+
+### Changed
+- `Containerfile` steps 2 and 4 run with a throwaway `/run`
+  (`--mount=type=tmpfs,target=/run`), so work folders left there by packages
+  (`/run/dnf`, `/run/lvm`, `/run/mdadm`, ...) no longer end up in the image
+  (bootc lint "nonempty-run-tmp").
+
+---
+
 ## Version 6 — 2026-10-16
 
 ### Added
@@ -275,6 +294,8 @@ First numbered release. Everything below this section is the history that led to
 ## Pending / ideas
 - `plasma-discover-notifier` for Flatpak update notifications.
 - Check whether the `systemd-remount-fs` error predates the in-image `dracut` rebuild.
-- Review the two `bootc container lint` warnings.
+- dracut logs `ERROR: installing '/root'` during the build (harmless: `/root`
+  links to `/var/roothome`, which doesn't exist at build time). Possible fix:
+  `mkdir -p /var/roothome` before dracut, `rmdir` after.
 - Google Drive: choose a replacement for `kio-gdrive` (removed in version 4).
   One candidate: `rclone` + `fuse3` (`~/GoogleDrive`, user service `rclone-gdrive`).
