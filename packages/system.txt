@@ -7,6 +7,10 @@ ostree
 # Time sync (keeps the clock right, e.g. after the VM was suspended)
 chrony
 
+# English locale data (LANG=en_US.UTF-8 in /etc/locale.conf); the minimal base
+# only has C/POSIX, so Qt and other programs warned "Failed to set locale"
+glibc-langpack-en
+
 # Command-line tools
 usbutils            # lsusb
 curl
@@ -38,3 +42,4 @@ lvm2
 iptables-nft        # iptables (kill switch, firewall rules)
 iproute             # ip (routes, interfaces)
 libnsl              # network library used by PIA's daemon
+xterm               # PIA 3.8+ requires it (its GUI opens commands in xterm)

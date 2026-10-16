@@ -111,6 +111,7 @@ RUN sed 's/#.*//' /tmp/packages/*.txt \
 #   system_files/usr/lib/bootc/kargs.d/10-splash.toml   boot splash arguments
 #   system_files/usr/lib/tmpfiles.d/nfz-usrlocal.conf   folders under /var/usrlocal
 #   system_files/etc/containers/nodocker                silence podman-docker
+#   system_files/etc/locale.conf                        LANG=en_US.UTF-8
 #   system_files/etc/containers/registries.conf.d/...   short image names
 # Copied after the packages so a package can't overwrite our versions.
 # -----------------------------------------------------------------------------

@@ -10,7 +10,21 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
-## Version 5 — in progress (not built yet)
+## Version 6 — in progress (not built yet)
+
+### Added
+- `xterm` (`packages/system.txt`, PIA group): PIA 3.8's installer requires it
+  (its GUI opens commands in xterm). Without it the installer falls back to
+  `yum install`, which bootc refuses ("configured to be read-only"), and stops.
+- `glibc-langpack-en` (`packages/system.txt`) and
+  `system_files/etc/locale.conf` (`LANG=en_US.UTF-8`): the minimal base only
+  had `glibc-minimal-langpack` (C/POSIX), so `locale`, Qt and PIA's installer
+  warned "Failed to set locale". A machine's own `/etc/locale.conf` keeps
+  priority (`/etc` 3-way merge).
+
+---
+
+## Version 5 — 2026-10-16
 
 ### Added
 - Disk tools (`packages/apps.txt`): `partitionmanager` + `kpmcore` (KDE
@@ -202,8 +216,10 @@ First numbered release. Everything below this section is the history that led to
 - Fedora Flatpak remote: `sudo flatpak remote-add --if-not-exists fedora oci+https://registry.fedoraproject.org`
 - Existing user's shell: `sudo usermod -s /usr/bin/zsh $USER && mkdir -p ~/.config/zsh`
 - Oh My Zsh: installed in `~/.local/share/oh-my-zsh`.
-- PIA's own app (needs version 5 for `/opt` and `/usr/local`, and the
-  version 4 packages `iptables-nft`, `iproute`, `libnsl`):
+- PIA's own app (needs version 5 for `/opt` and `/usr/local`, the version 4
+  packages `iptables-nft`, `iproute`, `libnsl`, and for PIA 3.8+ `xterm`
+  (version 6). On version 5, add xterm until the next reboot first:
+  `sudo bootc usr-overlay && sudo dnf install -y xterm`):
   1. Check: `readlink /opt /usr/local` prints `var/opt` and `../var/usrlocal`.
   2. Extract the installer: `sh pia-linux-<ver>.run --noexec --target pia-linux-<ver>`.
   3. In that folder: `sed -i -e s,/usr/share,/usr/local/share,g install.sh`
@@ -262,4 +278,3 @@ First numbered release. Everything below this section is the history that led to
 - Review the two `bootc container lint` warnings.
 - Google Drive: choose a replacement for `kio-gdrive` (removed in version 4).
   One candidate: `rclone` + `fuse3` (`~/GoogleDrive`, user service `rclone-gdrive`).
-- `glibc-langpack-en` + `/etc/locale.conf` (`LANG=en_US.UTF-8`) to fix Qt's non-UTF-8 locale warning.
