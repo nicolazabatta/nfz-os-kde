@@ -10,7 +10,7 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
-## Version 7 — in progress (not built yet)
+## Version 7 — 2026-10-17
 
 ### Added
 - `scripts/90-var-tmpfiles.sh` (runs last): writes
