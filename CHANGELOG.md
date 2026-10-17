@@ -10,7 +10,7 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
-## Version 8 — in progress (not built yet)
+## Version 8 — 2026-10-17
 
 ### Added
 - Terminals (`packages/apps.txt`): `kitty` (GPU terminal with tabs and split
