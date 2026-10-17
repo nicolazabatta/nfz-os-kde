@@ -129,7 +129,9 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
   (like Kinoite); fails the build if USB-serial drivers (and on x86_64
   `amdgpu`, `i915`, `xe`, `nouveau`, `iwlwifi`) are missing.
 - Image tags now include the architecture (`:latest-x86_64`, `:3-x86_64`).
-  Older aarch64 builds keep their tags `:latest` and `:1`.
+  Older aarch64 builds keep their tags `:latest` and `:1` (renamed on
+  2026-10-17 to `:latest-aarch64` and `:1-aarch64`; the Parallels VM was
+  switched to `:latest-aarch64`).
 
 ---
 
