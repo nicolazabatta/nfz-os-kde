@@ -3,6 +3,27 @@ code        # Visual Studio Code (from repos/vscode.repo)
 neovim
 tmux
 
+# Neovim (kickstart.nvim): search, clipboard, Tree-sitter
+ripgrep             # rg: Telescope live grep (required by kickstart)
+fd-find             # fd: fast file search in Telescope
+wl-clipboard        # wl-copy/wl-paste: system clipboard on Wayland
+tree-sitter-cli     # builds Tree-sitter parsers (needed by current nvim-treesitter)
+luarocks            # Lua package manager (lazy.nvim health check); pulls in lua
+
+# C / C++ (gcc and make are already in the image)
+gcc-c++             # g++
+clang-tools-extra   # clangd (language server), clang-format, clang-tidy
+cmake
+gdb                 # debugger
+
+# Python (python3 is already in the image)
+python3-pip         # pip; Mason also uses it for Python tools
+
+# JavaScript / TypeScript / HTML / CSS
+nodejs24            # Node.js 24 LTS
+nodejs24-bin        # the plain `node` command
+nodejs24-npm        # npm: Mason installs the web language servers with it
+
 # GitHub and git remotes
 gh                  # GitHub CLI: browser sign-in (gh auth login), also sets up git pushes
 openssh-clients     # ssh, ssh-keygen: git over SSH (only a dependency until now)

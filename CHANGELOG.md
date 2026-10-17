@@ -10,6 +10,22 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
+## Version 9 — in progress (not built yet)
+
+### Added
+- Development tools for Neovim with kickstart.nvim (`packages/dev.txt`):
+  - search, clipboard, Tree-sitter: `ripgrep`, `fd-find`, `wl-clipboard`,
+    `tree-sitter-cli`, `luarocks` (+ `lua`);
+  - C/C++: `gcc-c++`, `clang-tools-extra` (`clangd`, `clang-format`,
+    `clang-tidy`), `cmake`, `gdb`;
+  - Python: `python3-pip`;
+  - JavaScript/TypeScript/HTML/CSS: `nodejs24`, `nodejs24-bin`, `nodejs24-npm`.
+  The image provides the tools and runtimes; kickstart.nvim (in
+  `~/.config/nvim`) installs the language servers, formatters and Tree-sitter
+  parsers per user through Mason (`~/.local/share/nvim`).
+
+---
+
 ## Version 8 — 2026-10-17
 
 ### Added
@@ -332,6 +348,12 @@ First numbered release. Everything below this section is the history that led to
      in KWallet). From then on the key unlocks silently at login.
   - Alternative to steps 2–5 over HTTPS: `gh auth login` (GitHub.com → HTTPS →
     authenticate Git: yes → login with a web browser).
+- Neovim with kickstart.nvim (needs version 9 for its tools): fork
+  `nvim-lua/kickstart.nvim` on GitHub, then
+  `git clone git@github.com:nicolazabatta/kickstart.nvim.git ~/.config/nvim`
+  and start `nvim` (it installs its plugins on first start); check with
+  `:checkhealth`. Languages (Tree-sitter parsers and Mason servers/formatters)
+  are configured in the fork's `init.lua`.
 - Claude: use the web app at claude.ai (Firefox, or a Chromium-based browser's
   "Install page as app" for its own window). The desktop app's Linux beta is Debian/Ubuntu only.
 - Google Drive: nothing in the image for now (KDE's `kio-gdrive` was removed in
