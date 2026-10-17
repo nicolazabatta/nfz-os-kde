@@ -1,5 +1,7 @@
 # Desktop applications
-konsole
+konsole             # keep: Krusader's terminal panel uses Konsole's component
+yakuake             # drop-down terminal (F12), built on Konsole
+kitty               # GPU terminal: tabs, split layouts, config in ~/.config/kitty/kitty.conf
 krusader
 krename
 kdiff3

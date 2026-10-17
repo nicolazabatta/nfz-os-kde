@@ -10,6 +10,28 @@ bump `VERSION`, add a section at the top of this file, and tag the commit in git
 
 ---
 
+## Version 8 — in progress (not built yet)
+
+### Added
+- Terminals (`packages/apps.txt`): `kitty` (GPU terminal with tabs and split
+  layouts; its `kitten`, shell integration and terminfo come along as hard
+  dependencies) and `yakuake` (drop-down terminal on F12, built on Konsole).
+  Both are in Fedora's own repos. Konsole stays: Krusader's terminal panel
+  uses its component. Ghostty was considered (only available from a COPR) and
+  not added.
+- Nerd Fonts JetBrainsMono and Meslo (incl. MesloLGS NF for Powerlevel10k),
+  release v3.5.1 (`scripts/35-nerd-fonts.sh`): not packaged by Fedora, so
+  downloaded from github.com/ryanoasis/nerd-fonts during the build, checked
+  against SHA-256 checksums pinned in the script, and installed in
+  `/usr/share/fonts/nerd-fonts/`. Available in every font picker; not the
+  default font. About 435 MB unpacked (every weight in normal, Mono and Propo
+  variants). To update: change `NF_VERSION` and both checksums.
+- `openssl` (`packages/system.txt`): the command for creating and inspecting
+  certificates. Only the libraries (`openssl-libs`) were in the image before,
+  as a dependency.
+
+---
+
 ## Version 7 — 2026-10-17
 
 ### Added
@@ -264,11 +286,29 @@ First numbered release. Everything below this section is the history that led to
   `"runArgs": ["--userns=keep-id", "--security-opt", "label=disable"]`.
   If `podman run` fails, add subuids/subgids:
   `sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 $USER`.
-- ESP-IDF in a dev container: Espressif's config (**ESP-IDF: Add Docker Container
-  Configuration**) with `"runArgs": ["--privileged", "--group-add=keep-groups"]`.
-  Serial access: `grep '^dialout:' /usr/lib/group | sudo tee -a /etc/group`, then
-  `sudo usermod -aG dialout $USER`; attach the board to the VM in Parallels.
-  Full notes: project doc `esp-idf-devcontainer.md`.
+- ESP-IDF in a VS Code dev container (extensions: Dev Containers, ESP-IDF).
+  Building and flashing work on the real x86_64 machine (2026-10-17); on the
+  Parallels VM flashing failed because of its USB passthrough (WCH CH343,
+  `1a86:55d3`, DTR/RTS timeout).
+  1. Serial access, once per machine:
+     `grep '^dialout:' /usr/lib/group | sudo tee -a /etc/group`, then
+     `sudo usermod -aG dialout $USER`, then **reboot** (logging out is not
+     enough: user services keep the old groups). Check: `id -nG` lists `dialout`.
+  2. Board check without VS Code (with the board plugged in, `/dev/ttyACM0`):
+     `podman run --rm -it --group-add keep-groups --device /dev/ttyACM0 docker.io/espressif/idf:latest esptool.py --port /dev/ttyACM0 chip_id`
+  3. Workspace: a host folder `~/esp` holding the `.devcontainer` from
+     **ESP-IDF: Add Docker Container Configuration**, with
+     `"runArgs": ["--privileged", "--group-add=keep-groups"]`. Open `~/esp`,
+     **Reopen in Container**, and create projects in `/workspaces/esp` (only the
+     opened folder is shared with the host; anything else is lost with the
+     container).
+  4. Per project: `cp -r ~/esp/.devcontainer ~/esp/<project>/`, open
+     `~/esp/<project>` and **Reopen in Container**; then
+     `idf.py build` and `idf.py -p /dev/ttyACM0 flash monitor` (exit: Ctrl+]).
+  - If VS Code hangs after "Container started": close and reopen the folder.
+  - On the Parallels VM: keep the board on macOS and flash over the network
+    (`esp_rfc2217_server -p 4000 /dev/cu.usbmodemXXXX` on the Mac,
+    `idf.py -p 'rfc2217://10.211.55.2:4000?ign_set_control' flash` in the container).
 - GitHub over SSH, on a brand-new machine or for a new user (needs version 4 for
   `ksshaskpass`; one SSH key per machine, so a lost machine's key can be removed alone):
   1. Git identity: `git config --global user.name "Nicola Zabatta"` and

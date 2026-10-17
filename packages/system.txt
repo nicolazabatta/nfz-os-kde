@@ -14,6 +14,7 @@ glibc-langpack-en
 # Command-line tools
 usbutils            # lsusb
 curl
+openssl             # create and inspect certificates (openssl-libs is already a dependency)
 git
 ncurses
 zsh

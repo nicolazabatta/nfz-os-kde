@@ -139,6 +139,7 @@ COPY system_files/ /
 #   20-branding.sh        GRUB name: "NFZ Fedora <release> KDE <VERSION>"
 #   25-opt-usrlocal.sh    /opt and /usr/local as links into /var (writable, like Kinoite)
 #   30-flatpak.sh         add Flathub as a system-wide Flatpak remote
+#   35-nerd-fonts.sh      Nerd Fonts (JetBrainsMono, Meslo) from GitHub, checksums pinned
 #   40-shell.sh           zsh as default shell, config in ~/.config/zsh
 #   50-services.sh        enable login screen, NetworkManager, chronyd, bluetooth; boot to desktop
 #   90-var-tmpfiles.sh    boot-time rules for the folders packages created in /var
